@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daily Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root[data-theme="light"] {
+    --bg: #F5F3EE;
+    --surface: #FFFFFF;
+    --surface2: #EDEBE6;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1A1916;
+    --text2: #6B6860;
+    --text3: #A09D96;
+    --accent: #2A6041;
+    --accent-bg: #EAF3DE;
+    --accent-light: #C0DD97;
+    --check-bg: #2A6041;
+    --check-tick: #fff;
+    --tag-bg: #EDEBE6;
+    --tag-text: #6B6860;
+    --done-line: rgba(0,0,0,0.25);
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --toggle-bg: #E3E1DC;
+    --toggle-btn: #fff;
+  }
+  :root[data-theme="dark"] {
+    --bg: #141412;
+    --surface: #1E1D1B;
+    --surface2: #272521;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #F0EDE8;
+    --text2: #9E9B94;
+    --text3: #5E5C57;
+    --accent: #5DCAA5;
+    --accent-bg: #04342C;
+    --accent-light: #0F6E56;
+    --check-bg: #5DCAA5;
+    --check-tick: #04342C;
+    --tag-bg: #272521;
+    --tag-text: #9E9B94;
+    --done-line: rgba(255,255,255,0.2);
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+    --toggle-bg: #2A2926;
+    --toggle-btn: #5DCAA5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2.5rem 1rem;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  .page {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .header-left {}
+  .header-title {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .header-date {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 44px;
+    height: 26px;
+    border-radius: 99px;
+    background: var(--toggle-bg);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.25s;
+    flex-shrink: 0;
+  }
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--toggle-btn);
+    transition: transform 0.25s, background 0.25s;
+  }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(18px); }
+
+  /* Progress */
+  .progress-section { margin-bottom: 2rem; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .progress-meta span:first-child { color: var(--text2); }
+  .track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    min-width: 0;
+  }
+
+  /* Groups */
+  .group { margin-bottom: 1.5rem; }
+  .group-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+  .group-items { display: flex; flex-direction: column; gap: 5px; }
+
+  /* Task item */
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.15s, opacity 0.2s, transform 0.1s;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.25s ease forwards;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: translateY(0); } }
+  .task:hover { border-color: var(--border2); }
+  .task:active { transform: scale(0.99); }
+  .task.done { opacity: 0.5; }
+
+  .cb {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border2);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    background: transparent;
+  }
+  .task.done .cb {
+    background: var(--check-bg);
+    border-color: var(--check-bg);
+  }
+  .cb svg { display: none; }
+  .task.done .cb svg { display: block; }
+
+  .task-label {
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+    transition: color 0.15s;
+  }
+  .task.done .task-label {
+    text-decoration: line-through;
+    text-decoration-color: var(--done-line);
+    color: var(--text2);
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .reset-btn {
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text2);
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+
+  .auto-reset-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform: scale(1); }
+    50% { opacity:0.5; transform: scale(0.8); }
+  }
+
+  .countdown {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    margin-top: 6px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">Daily Checklist</div>
+      <div class="header-date" id="date-label"></div>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode" onclick="toggleTheme()"></button>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-meta">
+      <span id="progress-text">0 / 0 done</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="track"><div class="fill" id="fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="checklist"></div>
+
+  <div class="footer">
+    <button class="reset-btn" onclick="uncheckAll()">Uncheck all</button>
+    <div>
+      <div class="auto-reset-badge">
+        <span class="dot"></span>
+        <span>Resets at midnight</span>
+      </div>
+      <div class="countdown" id="countdown"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'abhinav_daily_checklist_v1';
+
+const GROUPS = [
+  {
+    label: 'Technical monitoring',
+    tasks: [
+      'Check Razorpay & Google Analytics',
+      'Check Netlify for Credits and Production Builds',
+      'Check Github for Errors',
+      'Check Website Updates in VSCode',
+    ]
+  },
+  {
+    label: 'Batch management',
+    tasks: [
+      'Schedule Class for every Batch (If any) on Google Calendar',
+      'Draft Message with Joining Link',
+      'Answer Query (If any)',
+    ]
+  }
+];
+
+const today = () => new Date().toISOString().slice(0, 10);
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+function buildInitialChecks() {
+  const checks = {};
+  GROUPS.forEach(g => g.tasks.forEach(t => { checks[t] = false; }));
+  return checks;
+}
+
+let state = loadState();
+if (!state) {
+  state = { date: today(), checks: buildInitialChecks(), theme: 'light' };
+} else {
+  if (state.date !== today()) {
+    const checks = buildInitialChecks();
+    state = { date: today(), checks, theme: state.theme || 'light' };
+  }
+}
+saveState(state);
+
+// Apply theme
+document.documentElement.setAttribute('data-theme', state.theme || 'light');
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  state.theme = next;
+  saveState(state);
+}
+
+function toggleTask(taskLabel) {
+  state.checks[taskLabel] = !state.checks[taskLabel];
+  saveState(state);
+  render();
+}
+
+function uncheckAll() {
+  Object.keys(state.checks).forEach(k => state.checks[k] = false);
+  saveState(state);
+  render();
+}
+
+function render() {
+  const container = document.getElementById('checklist');
+  container.innerHTML = '';
+
+  let total = 0, done = 0;
+
+  GROUPS.forEach(group => {
+    const groupEl = document.createElement('div');
+    groupEl.className = 'group';
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'group-label';
+    labelEl.textContent = group.label;
+    groupEl.appendChild(labelEl);
+
+    const itemsEl = document.createElement('div');
+    itemsEl.className = 'group-items';
+
+    group.tasks.forEach(taskLabel => {
+      total++;
+      const isDone = !!state.checks[taskLabel];
+      if (isDone) done++;
+
+      const el = document.createElement('div');
+      el.className = 'task' + (isDone ? ' done' : '');
+      el.innerHTML = `
+        <div class="cb">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4.5L4 7.5L10 1" stroke="var(--check-tick)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="task-label">${esc(taskLabel)}</span>
+      `;
+      el.onclick = () => toggleTask(taskLabel);
+      itemsEl.appendChild(el);
+    });
+
+    groupEl.appendChild(itemsEl);
+    container.appendChild(groupEl);
+  });
+
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  document.getElementById('progress-text').textContent = `${done} / ${total} done`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('fill').style.width = pct + '%';
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateMeta() {
+  const now = new Date();
+  document.getElementById('date-label').textContent = now.toLocaleDateString('en-IN', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const diff = midnight - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('countdown').textContent =
+    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} remaining`;
+}
+
+function midnightCheck() {
+  if (state.date !== today()) {
+    state.checks = buildInitialChecks();
+    state.date = today();
+    saveState(state);
+    render();
+  }
+}
+
+render();
+updateMeta();
+setInterval(() => { updateMeta(); midnightCheck(); }, 1000);
+</script>
+</body>
+</html>
