@@ -1,5 +1,6 @@
 import os
 # Added This line to test Branches
+# Now Merging Both Branches
 def get_directory_size(directory):
     """
     Calculates the total size of a directory and its subdirectories.
