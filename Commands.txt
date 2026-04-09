@@ -1,0 +1,118 @@
+ls – List files and directories
+ls
+ls -l
+pwd – Show current directory
+pwd
+cd – Change directory
+cd /home
+cd ..
+mkdir – Create directory
+mkdir myfolder
+rmdir – Remove empty directory
+rmdir myfolder
+rm – Delete files/directories
+rm file.txt
+rm -r folder
+cp – Copy files
+cp file.txt backup.txt
+mv – Move/rename files
+mv file.txt newname.txt
+touch – Create empty file
+touch file.txt
+file – Check file type
+file file.txt
+
+File Viewing & Editing
+cat – View file content
+cat file.txt
+less – View large files page by page
+less file.txt
+head – Show first lines
+head file.txt
+tail – Show last lines
+tail file.txt
+tail -f log.txt
+nano – Simple text editor
+nano file.txt
+vim – Advanced editor
+vim file.txt
+
+Search & Text Processing
+grep – Search text in files
+grep "error" file.txt
+find – Search files
+find /home -name file.txt
+locate – Fast file search
+locate file.txt
+wc – Count words/lines
+wc file.txt
+sort – Sort lines
+sort file.txt
+uniq – Remove duplicates
+uniq file.txt
+cut – Extract columns
+cut -d "," -f1 file.csv
+awk – Pattern scanning
+awk '{print $1}' file.txt
+sed – Stream editor
+sed 's/old/new/g' file.txt
+
+System & Process Commands
+top – Show running processes
+top
+htop – Interactive process viewer
+htop
+ps – Show processes
+ps aux
+kill – Stop process
+kill 1234
+killall – Kill by name
+killall chrome
+uptime – System uptime
+uptime
+free – Memory usage
+free -h
+df – Disk usage
+df -h
+du – Folder size
+du -sh folder
+
+Networking Commands
+ping – Test connection
+ping google.com
+ifconfig – Network info (legacy)
+ifconfig
+ip – Modern network command
+ip a
+curl – Fetch data from URL
+curl https://example.com
+wget – Download files
+wget https://example.com/file.zip
+
+Permissions & Users
+chmod – Change permissions
+chmod 755 file.sh
+chown – Change ownership
+chown user:file file.txt
+whoami – Current user
+whoami
+id – User info
+id
+
+Package Management (Debian/Ubuntu)
+apt update – Update package list
+sudo apt update
+apt upgrade – Upgrade packages
+sudo apt upgrade
+apt install – Install package
+sudo apt install git
+apt remove – Remove package
+sudo apt remove git
+
+Miscellaneous Commands
+history – Show command history
+history
+clear – Clear terminal
+clear
+echo – Print text
+echo "Hello World"
