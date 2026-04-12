@@ -22,7 +22,7 @@ touch file.txt
 file – Check file type
 file file.txt
 
-File Viewing & Editing
+-File Viewing & Editing
 cat – View file content
 cat file.txt
 less – View large files page by page
@@ -37,7 +37,7 @@ nano file.txt
 vim – Advanced editor
 vim file.txt
 
-Search & Text Processing
+-Search & Text Processing
 grep – Search text in files
 grep "error" file.txt
 find – Search files
@@ -57,7 +57,7 @@ awk '{print $1}' file.txt
 sed – Stream editor
 sed 's/old/new/g' file.txt
 
-System & Process Commands
+-System & Process Commands
 top – Show running processes
 top
 htop – Interactive process viewer
@@ -77,7 +77,7 @@ df -h
 du – Folder size
 du -sh folder
 
-Networking Commands
+-Networking Commands
 ping – Test connection
 ping google.com
 ifconfig – Network info (legacy)
@@ -89,7 +89,7 @@ curl https://example.com
 wget – Download files
 wget https://example.com/file.zip
 
-Permissions & Users
+-Permissions & Users
 chmod – Change permissions
 chmod 755 file.sh
 chown – Change ownership
@@ -99,7 +99,7 @@ whoami
 id – User info
 id
 
-Package Management (Debian/Ubuntu)
+-Package Management (Debian/Ubuntu)
 apt update – Update package list
 sudo apt update
 apt upgrade – Upgrade packages
@@ -109,7 +109,7 @@ sudo apt install git
 apt remove – Remove package
 sudo apt remove git
 
-Miscellaneous Commands
+-Miscellaneous Commands
 history – Show command history
 history
 clear – Clear terminal
