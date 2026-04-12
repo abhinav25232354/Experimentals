@@ -1,6 +1,10 @@
 import os
 # Added This line to test Branches
 # Now Merging Both Branch
+
+# This script calculates the total size of a specified directory and counts the number of files categorized by their extensions.
+"""This Python Script Calculates the total size
+of the specific directory and counts the number of files categorized by their extensions."""
 def get_directory_size(directory):
     """
     Calculates the total size of a directory and its subdirectories.
