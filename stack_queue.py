@@ -69,6 +69,9 @@ class Queue:
 
     def __repr__(self):
         return f"Queue({list(self._items)})"
+    
+class Singly_Linked_List:
+    pass
 
 
 def main():
